@@ -1,0 +1,18 @@
+{{#each products}}
+<section>
+  <div class="container-fluid">
+  <div class="row pt-3">
+    <div class="col-md-3 col-12 col-sm-6">
+      
+<div class="card m-10" >
+  <img src="{{img}}" class="card-img-top"alt="...">
+  <div class="card-body">
+    <h5 class="card-title">{{name}}</h5>
+    <h7 class="text-info">₹ {{price}}</h7>
+    <p class="card-text">{{des}}</p>
+    <a href="#" class="btn btn-primary">Add to cart</a>
+  </div>
+</div>
+</div>
+</section>
+{{/each}}
