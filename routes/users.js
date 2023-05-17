@@ -6,8 +6,14 @@ var productHelper =require('../helpers/Product-helpers')
 router.get('/', function(req, res, next) {
 productHelper.getAllProducts().then((product)=>{
 
-  res.render('index', { product,admin:false});
+  res.render('./user/view-user-product', { product,admin:false});
 }); 
 });
+router.get('/login',(req, res)=>{
+  res.render('./user/login');
+})
+router.get('/signup',(req, res)=>{
+  res.render('./user/Signup');
+})
 
 module.exports = router;

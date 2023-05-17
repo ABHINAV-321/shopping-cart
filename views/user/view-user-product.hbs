@@ -1,0 +1,21 @@
+
+<section>
+  <div class="container-fluid">
+  <div class="row pt-3">
+{{#each product}}
+    <div class="col-md-3 col-11 col-sm-6 m-3">
+<div class="card m-10" style="height:26rem;">
+ 
+  <img src="/images/product-img/{{_id}}.jpg" class="card-img-top pb-3" style="height:12rem display:block; margin-left: auto; margin-right: auto; width:12rem; " alt="">
+  <div class="card-body">
+    <h5 class="card-title">{{name}}</h5>
+    <h7 class="text-info">₹ {{price}}</h7>
+    <p class="card-text">{{des}}</p>
+    <a href="#" class="btn btn-primary ">Add to cart</a>
+  </div>
+</div>
+</div>
+{{/each}}
+</div>
+</div>
+</section>
