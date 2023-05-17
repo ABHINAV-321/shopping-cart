@@ -1,11 +1,12 @@
-{{#each products}}
+{{#each product}}
 <section>
   <div class="container-fluid">
   <div class="row pt-3">
     <div class="col-md-3 col-12 col-sm-6">
       
 <div class="card m-10" >
-  <img src="{{img}}" class="card-img-top"alt="...">
+ 
+  <img src="/images/product-img/{{_id}}.jpg" class="card-img-top"alt="...">
   <div class="card-body">
     <h5 class="card-title">{{name}}</h5>
     <h7 class="text-info">₹ {{price}}</h7>
