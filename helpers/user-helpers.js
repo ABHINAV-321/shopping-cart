@@ -18,9 +18,28 @@ module.exports={
      return new Promise(async(resolve, reject)=>{
        userData.Password=await bcrypt.hash(userData.Password,10)
       client.db('shopping-cart').collection('user').insertOne(userData).then((data)=>{
-        console.log(data)
         resolve(data);
       }) 
      })
+   },
+   doLogin:(userData)=>{
+    return new Promise(async(resolve,reject)=>{
+      let loginStatus=false;
+      let Response={}
+      let user=await client.db.get.collection('user').findOne({Email:userData.Email})
+      if(user){
+        bcrypt.compare(user.Password,userData.Password).then((status)=>{
+          if(status){
+            console.log("Login success");
+          }else{
+            console.log("login failed")
+          }
+
+
+        })
+      }else{
+        console.log('login failed email or paswd wrong')
+      }
+    })
    }
 }
