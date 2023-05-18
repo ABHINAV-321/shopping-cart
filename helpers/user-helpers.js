@@ -30,28 +30,31 @@ module.exports={
       let loginStatus=false;
       let response={}
       let user=await client.db('shopping-cart').collection('user').findOne({Email:userData.Email})
+
    //   console.log(userData)
      // console.log(user)
     if(user){
+      resolve({EmailErr:false})
         bcrypt.compare(userData.Password,user.Password).then((status)=>{
           if(status){
-            console.log(status)
             response.user=user;
             response.status=true;
-            resolve(response);
+            resolve({response,PasswordErr:false});
           //  console.log(resolve)
           //  console.log(response)
-            console.log("Login success");
+            
           }else{
-            console.log(status)
-            console.log("login failed")
-            resolve({status:false});
+
+            //console.log(status)
+          
+
+            resolve({status:false,PasswordErr:true});
           }
         })
       }else{
-        resolve({status:false});
+        resolve({status:false,EmailErr:true});
     //    console.log(user)
-        console.log('login failed email or paswd wrong')
+        console.log('login failed paswd wrong')
       }
     })
    }

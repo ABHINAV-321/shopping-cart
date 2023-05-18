@@ -13,7 +13,12 @@ productHelper.getAllProducts().then((product)=>{
 }); 
 });
 router.get('/login',(req, res)=>{
-  res.render('./user/login');
+  if(req.session.loggedIn){
+    res.redirect('/')
+  }else{
+  res.render('./user/login',{"login-err":req.session.loginErr});
+  req.session.loginErr=false;
+  }
 })
 router.get('/signup',(req, res)=>{
   res.render('./user/Signup');
@@ -25,20 +30,25 @@ router.post('/signup',(req, res)=>{
   })
 })
 router.post('/login',(req,res)=>{
-  userHelper.doLogin(req.body).then((response)=>{
 
+  userHelper.doLogin(req.body).then((response)=>{
+    console.log(response.loginErr);
     if(response.status===true){
       req.session.loggedIn=true;
       req.session.user=response.user
+     
     //  console.log("working")
       
       res.redirect ('/')
     }else{
       res.redirect('/login')
+      req.session.loginErr=true;
     
     }
   })
+
 })
+
 router.get('/logout',(req, res)=>{
   req.session.destroy()
   res.redirect('/login')
