@@ -38,18 +38,18 @@ module.exports={
             console.log(status)
             response.user=user;
             response.status=true;
-            resolve.status=true;
+            resolve(response);
           //  console.log(resolve)
           //  console.log(response)
             console.log("Login success");
           }else{
             console.log(status)
             console.log("login failed")
-            resolve.status=false;
+            resolve({status:false});
           }
         })
       }else{
-        resolve.status=false;
+        resolve({status:false});
     //    console.log(user)
         console.log('login failed email or paswd wrong')
       }
