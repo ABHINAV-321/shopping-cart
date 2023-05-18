@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var fileUpload = require('express-fileupload')
 var db = require('./Config/connection')
+var session = require('express-session')
+
 
 var hbs = require('hbs');
 
@@ -38,6 +40,7 @@ app.set('views', path.join(__dirname, 'views'));
 //app.engine('hbs', expressHbs());
 app.set('view engine', 'hbs');
 //app.engine('hbs',hbs({extname:'hbs',defaultLayout:'Layout',layoutsDir:__dirname+'/views/layout/',partialsDir:__dirname+'/views/partials/'}))
+app.use(session({secret:"key",cookie:{maxAge:600000}}))
 app.use(fileUpload());
 app.use(logger('dev'));
 app.use(express.json());

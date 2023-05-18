@@ -5,9 +5,11 @@ var userHelper = require('../helpers/user-helpers.js')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  let user= req.session.user
+  console.log(user)
 productHelper.getAllProducts().then((product)=>{
 
-  res.render('./user/view-user-product', { product,admin:false});
+  res.render('./user/view-user-product', { product,admin:false,user});
 }); 
 });
 router.get('/login',(req, res)=>{
@@ -24,14 +26,16 @@ router.post('/signup',(req, res)=>{
 })
 router.post('/login',(req,res)=>{
   userHelper.doLogin(req.body).then((response)=>{
-  console.log('status ='+response.status)
+
     if(response.status===true){
-      console.log("working")
+      req.session.loggedIn=true;
+      req.session.user=response.user
+    //  console.log("working")
       
       res.redirect ('/')
     }else{
       res.redirect('/login')
-      console.log(response.status)
+    
     }
   })
 })
