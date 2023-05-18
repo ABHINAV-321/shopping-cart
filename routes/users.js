@@ -19,10 +19,21 @@ router.get('/signup',(req, res)=>{
 router.post('/signup',(req, res)=>{
   userHelper.doSignup(req.body).then((response)=>{
     console.log(req.body)
+    res.send('<h1>signup successful</h1>')
   })
 })
 router.post('/login',(req,res)=>{
-  userHelper.doLogin(req.body)
+  userHelper.doLogin(req.body).then((response)=>{
+  console.log('status ='+response.status)
+    if(response.status===true){
+      console.log("working")
+      
+      res.redirect ('/')
+    }else{
+      res.redirect('/login')
+      console.log(response.status)
+    }
+  })
 })
 
 module.exports = router;

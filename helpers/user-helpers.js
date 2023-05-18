@@ -16,7 +16,10 @@ const bcrypt = require('bcrypt');
 module.exports={
    doSignup:(userData)=>{
      return new Promise(async(resolve, reject)=>{
+    //  console.log(userData)
        userData.Password=await bcrypt.hash(userData.Password,10)
+       
+       
       client.db('shopping-cart').collection('user').insertOne(userData).then((data)=>{
         resolve(data);
       }) 
@@ -25,19 +28,29 @@ module.exports={
    doLogin:(userData)=>{
     return new Promise(async(resolve,reject)=>{
       let loginStatus=false;
-      let Response={}
-      let user=await client.db.get.collection('user').findOne({Email:userData.Email})
-      if(user){
-        bcrypt.compare(user.Password,userData.Password).then((status)=>{
+      let response={}
+      let user=await client.db('shopping-cart').collection('user').findOne({Email:userData.Email})
+   //   console.log(userData)
+     // console.log(user)
+    if(user){
+        bcrypt.compare(userData.Password,user.Password).then((status)=>{
           if(status){
+            console.log(status)
+            response.user=user;
+            response.status=true;
+            resolve.status=true;
+          //  console.log(resolve)
+          //  console.log(response)
             console.log("Login success");
           }else{
+            console.log(status)
             console.log("login failed")
+            resolve.status=false;
           }
-
-
         })
       }else{
+        resolve.status=false;
+    //    console.log(user)
         console.log('login failed email or paswd wrong')
       }
     })
