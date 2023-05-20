@@ -13,6 +13,7 @@ const client = new MongoClient(uri, {
 });
 var db=require('../Config/connection').get
 const bcrypt = require('bcrypt');
+const { response } = require('express');
 module.exports={
    doSignup:(userData)=>{
      return new Promise(async(resolve, reject)=>{
@@ -34,28 +35,35 @@ module.exports={
    //   console.log(userData)
      // console.log(user)
     if(user){
-      resolve({EmailErr:false})
         bcrypt.compare(userData.Password,user.Password).then((status)=>{
           if(status){
             response.user=user;
             response.status=true;
-            resolve({response,PasswordErr:false});
+            response.PasswordErr=false;
+            response.EmailErr=false;
+            resolve({response});
           //  console.log(resolve)
           //  console.log(response)
             
           }else{
 
             //console.log(status)
-          
-
-            resolve({status:false,PasswordErr:true});
+          response.status=false;
+          response.PasswordErr=true;
+          response.EmailErr=false;
+          resolve({response});
           }
         })
       }else{
-        resolve({status:false,EmailErr:true});
-    //    console.log(user)
-        console.log('login failed paswd wrong')
+        response.status=false;
+        response.EmailErr=true;
+        response.PasswordErr=false;
+        resolve({response});
+     //    console.log(user)
+      //  console.log('email err')
       }
     })
+    //console.log("response log"+response);
+   // console.log(response.EmailErr);
    }
-}
+  }

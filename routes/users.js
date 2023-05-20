@@ -16,7 +16,8 @@ router.get('/login',(req, res)=>{
   if(req.session.loggedIn){
     res.redirect('/')
   }else{
-  res.render('./user/login',{"login-err":req.session.loginErr});
+    let loginErr=req.session.loginErr
+  res.render('./user/login',loginErr);
   req.session.loginErr=false;
   }
 })
@@ -32,19 +33,19 @@ router.post('/signup',(req, res)=>{
 router.post('/login',(req,res)=>{
 
   userHelper.doLogin(req.body).then((response)=>{
-    console.log(response.loginErr);
-    if(response.status===true){
+    console.log(response.status)
+    if(response.status){
       req.session.loggedIn=true;
       req.session.user=response.user
-     
-    //  console.log("working")
-      
       res.redirect ('/')
-    }else{
-      res.redirect('/login')
-      req.session.loginErr=true;
+    //  console.log("working")
+    }else {
+      res.redirect('/login')  
+      req.session.loginErr=response;
+      console.log(req.session.loginErr)
     
     }
+   // console.log(response);
   })
 
 })
