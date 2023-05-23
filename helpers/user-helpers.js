@@ -1,6 +1,6 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://abhi:hacker.abhi@cluster0.rfzif0y.mongodb.net/?retryWrites=true&w=majority";
-
+var objectId=require('mongodb').ObjectId
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 
 
@@ -42,7 +42,7 @@ module.exports={
             
             
             
-            console.log(status)
+          //  console.log(status)
             response.user=user;
             login.status=true;
             response.login=login;
@@ -71,5 +71,33 @@ module.exports={
       }
   //    console.log("responce in user helper "+response)
     })
+   }, 
+   addToCart:(proId, userId)=>{
+     return new Promise(async(resolve, reject)=>{
+       let userCart=await client.db('shopping-cart').collection('cart').findOne({user:new objectId(userId)})
+       if(userCart){
+       client.db('shopping-cart').collection('cart').updateOne({user:new objectId(userId)},{
+      
+         $push:{products:new objectId(proId)}
+       } 
+       ).then((response)=>{
+         resolve()
+       })
+       }
+       else{
+       let userObj={
+         user:new objectId(userId), 
+         products:[new objectId(proId)] 
+       }
+    
+     
+       client.db('shopping-cart').collection('cart').insertOne(userObj).then((response)=>{
+         resolve()
+       })
+       }
+
+       
+     })
    }
+   
 }

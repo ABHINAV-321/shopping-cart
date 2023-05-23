@@ -53,7 +53,7 @@ router.post('/edit-product',(req, res)=>{
 const image = req.files;
   productHelper.updateProduct(id,req.body).then(()=>{
     
- //   console.log(image) 
+//  console.log(image) 
     if(image){
         image.img.mv( __dirname +'/../public/images/product-img/'+id+".jpg") 
     }else{

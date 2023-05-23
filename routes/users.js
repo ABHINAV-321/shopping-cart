@@ -31,18 +31,23 @@ router.get('/signup',(req, res)=>{
 })
 router.post('/signup',(req, res)=>{
   userHelper.doSignup(req.body).then((response)=>{
-    console.log(req.body)
-    res.send('<h1>signup successful</h1>')
+   //   console.log(req.body)
+   console.log(response)
+   req.session.loggedIn=true;
+   req.session.user=req.body
+   res.redirect('/')
   })
 })
 router.post('/login',(req,res)=>{
   userHelper.doLogin(req.body).then((response)=>{
-//console.log("redponse.status ="+response[0])
+//console.log("redponse="+response)
 login =response.login
+
     if(response.login.status){
       req.session.loggedIn=true;
       req.session.user=response.user
-      console.log("working")
+    
+    // console.log("working")
      res.redirect ('/')
     }else{
       res.redirect('/login')
@@ -57,5 +62,10 @@ router.get('/logout',(req, res)=>{
 router.get('/cart',loginCheck,(req, res)=>{
 res.render('./user/cart')
 })
+router.get('/add-to-cart/:id',loginCheck, (req, res)=>{
 
+  userHelper.addToCart(req.params.id, req.session.user._id).then(()=>{
+    res.redirect('/')
+  })
+})
 module.exports = router;

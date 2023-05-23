@@ -19,8 +19,8 @@
     <input type="text" name="des" class="form-control"  value="{{des}}">
   </div>
   <div class="form-group">
-    <label >Image<br><img src="/images/product-img/{{_id}}.jpg" height="100px" width="100px"></label>
-    <input type="file" class="form-control-file" id="img" name="img" >
+    <label >Image<br><img src="/images/product-img/{{_id}}.jpg" height="100px" width="100px" id="imgView"></label>
+    <input type="file" class="form-control-file" id="img" name="img" onchange="viewImg(event) ">
   </div>
 <!--<div class="form-group">
     <label for="exampleFormControlFile1">Upload Image</label>
@@ -29,4 +29,9 @@
   
   <button type="submit" class="btn btn-primary">Update</button>
 </form>
+<script>
+  function viewImg(event){
+    document.getElementById('imgView').src=URL.createObjectURL(event.target.files[0])
+  }
+</script>
 </div>
