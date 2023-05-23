@@ -1,6 +1,6 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://abhi:hacker.abhi@cluster0.rfzif0y.mongodb.net/?retryWrites=true&w=majority";
-
+var objectId=require('mongodb').ObjectId
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 
 
@@ -35,5 +35,40 @@ let id =product._id
     resolve(product)
       
     })
+  }, 
+  deleteProduct:(proId)=>{
+    return new Promise ((resolve, reject)=>{
+      console.log(proId)
+      client.db('shopping-cart').collection('product').deleteOne({_id:new objectId(proId)}).then((response)=>{
+     //   console.log(response)
+     resolve(response)
+      })
+    })
+  }, 
+  getProduct:(proId)=>{
+    return new Promise((resolve, reject)=>{
+      
+
+    let product=client.db('shopping-cart').collection('product').findOne({_id:new objectId(proId)})
+ //   console.log(product)
+    resolve(product)
+    })
+    
+  }, 
+  updateProduct:(proId, proDetails)=>{
+    return new Promise((resolve, reject)=>{
+    console.log(proId)
+    client.db('shopping-cart').collection('product').updateOne({_id:new objectId(proId)},{
+      $set:{
+        _id:new objectId(proId), 
+        name:proDetails.name, 
+        price:proDetails.price,
+       category:proDetails.category,         
+       des:proDetails.des
+      }
+    }).then((response)=>{
+      resolve(response)
+    })
+    }) 
   }
 }

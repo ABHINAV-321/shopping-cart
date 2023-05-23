@@ -13,7 +13,6 @@ const client = new MongoClient(uri, {
 });
 var db=require('../Config/connection').get
 const bcrypt = require('bcrypt');
-const { response } = require('express');
 module.exports={
    doSignup:(userData)=>{
      return new Promise(async(resolve, reject)=>{
@@ -28,42 +27,49 @@ module.exports={
    },
    doLogin:(userData)=>{
     return new Promise(async(resolve,reject)=>{
-      let loginStatus=false;
+   //   let loginStatus=false;
       let response={}
+      
+     let login={}
       let user=await client.db('shopping-cart').collection('user').findOne({Email:userData.Email})
-
    //   console.log(userData)
      // console.log(user)
     if(user){
         bcrypt.compare(userData.Password,user.Password).then((status)=>{
           if(status){
+            
+            // remove it 
+            
+            
+            
+            console.log(status)
             response.user=user;
-            response.status=true;
-            response.PasswordErr=false;
-            response.EmailErr=false;
-            resolve({response});
+            login.status=true;
+            response.login=login;
+            resolve(response);
           //  console.log(resolve)
           //  console.log(response)
-            
+            console.log("Login success");
           }else{
-
-            //console.log(status)
-          response.status=false;
-          response.PasswordErr=true;
-          response.EmailErr=false;
-          resolve({response});
+            login.status=false;
+            login.PasswordErr=true;
+            login.EmailErr=false;
+            response.login=login;
+            console.log("login failed pswd err")
+            resolve(response);
           }
         })
       }else{
-        response.status=false;
-        response.EmailErr=true;
-        response.PasswordErr=false;
-        resolve({response});
-     //    console.log(user)
-      //  console.log('email err')
+        login.status=false;
+        login.PasswordErr=false;
+        login.EmailErr=true;
+    //    response.status=false;
+        response.login=login;
+        resolve(response);
+    //    console.log(user)
+        console.log('login failed email wrong')
       }
+  //    console.log("responce in user helper "+response)
     })
-    //console.log("response log"+response);
-   // console.log(response.EmailErr);
    }
-  }
+}
