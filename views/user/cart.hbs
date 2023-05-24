@@ -1,1 +1,23 @@
-<h2>cart is empty</h2>
+
+
+<section>
+  <div class="container-fluid">
+  <div class="row pt-3">
+{{#each products}}
+    <div class=" container-fluid col-md-3 col-xl-2 col-11 col-sm-6 m-3">
+<div class="card  " style="height:auto; width:auto; align:center;">
+ 
+  <img src="/images/product-img/{{_id}}.jpg" class="card-img-top pb-3" style="height:15rem display:block; margin-left: auto; margin-right: auto; width:12rem; " alt="">
+  <div class="card-body">
+    <h5 class="card-title">{{name}}</h5>
+    <h7 class="text-info">₹ {{price}}</h7>
+    <p class="card-text">{{des}}</p>
+     <a href="/sub/{{_id}}" class="btn btn-primary mr-3 ">-</a>1 <a href="/add/{{_id}}" class="ml-3 btn btn-primary ">+</a><br><br>
+    <a href="/order/{{_id}}" class="ml-3 btn btn-primary ">Order</a>
+  </div>
+</div>
+</div>
+{{/each}}
+</div>
+</div>
+</section>

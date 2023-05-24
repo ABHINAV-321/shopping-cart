@@ -13,12 +13,17 @@ if(req.session.loggedIn){
 }
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', async function(req, res, next) {
   let user= req.session.user
-//  console.log(user)
+  let cartCount=0
+if(user){
+ cartCount= await userHelper.getCartCount(user._id)
+console.log(cartCount)
+}
+
 productHelper.getAllProducts().then((product)=>{
 
-  res.render('./user/view-user-product', { product,admin:false,user});
+  res.render('./user/view-user-product', { product,admin:false,user,cartCount});
 }); 
 });
 router.get('/login',(req, res)=>{
@@ -59,13 +64,21 @@ router.get('/logout',(req, res)=>{
   req.session.destroy()
   res.redirect('/login')
 })
-router.get('/cart',loginCheck,(req, res)=>{
-res.render('./user/cart')
+router.get('/cart',loginCheck,async(req, res)=>{
+let cartCount=0
+if(req.session.user){
+ cartCount= await userHelper.getCartCount(req.session.user._id)}
+  let products=await userHelper.getCartProducts(req.session.user._id)
+  console.log(products)
+res.render('./user/cart',{products,user:req.session.user,cartCount})
 })
 router.get('/add-to-cart/:id',loginCheck, (req, res)=>{
 
   userHelper.addToCart(req.params.id, req.session.user._id).then(()=>{
     res.redirect('/')
   })
+})
+router.get('/sub/:id',(req, res)=>{
+  userHelper.decreaseCartItem(req.params.id,req.session.user._id)
 })
 module.exports = router;

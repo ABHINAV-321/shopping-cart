@@ -74,11 +74,12 @@ module.exports={
    }, 
    addToCart:(proId, userId)=>{
      return new Promise(async(resolve, reject)=>{
+       var gty=1;
        let userCart=await client.db('shopping-cart').collection('cart').findOne({user:new objectId(userId)})
        if(userCart){
        client.db('shopping-cart').collection('cart').updateOne({user:new objectId(userId)},{
       
-         $push:{products:new objectId(proId)}
+         $push:{products:[new objectId(proId),gty]}
        } 
        ).then((response)=>{
          resolve()
@@ -98,6 +99,51 @@ module.exports={
 
        
      })
+   }, 
+   getCartProducts:(userId) =>{
+     return new Promise(async(resolve, reject)=>{
+  let cartItems=await  client.db('shopping-cart').collection('cart').aggregate([
+         {
+         $match:{user:new objectId(userId)}
+       }, 
+       {
+         $lookup:{
+           from:'product', 
+           let:{prodlist:"$products"}, 
+          pipeline:[
+            {
+              $match:{
+                $expr:{
+                  $in:[['$_id',"$$prodlist"]]
+                }
+              }
+                
+            }], 
+            as:'cartItems'
+           
+         }
+       }
+       
+       ]).toArray()
+       resolve(cartItems[0].cartItems)
+     })
+   }, 
+   getCartCount:(userId)=>{
+     return new Promise(async(resolve, reject)=>{
+       let count=0;
+     let user=await client.db('shopping-cart').collection('cart').findOne({user:new objectId(userId)})
+     if(user){
+       count=user.products.length
+     }
+   //  console.log(count)
+     resolve(count)
+     })
+   
+   }, 
+   decreaseCartItem:(proId,userId)=>{
+     client.db('shopping-cart').collection('cart').findOne({user:new objectId(userId),})
    }
+  
+   
    
 }
