@@ -74,12 +74,12 @@ module.exports={
    }, 
    addToCart:(proId, userId)=>{
      return new Promise(async(resolve, reject)=>{
-       var gty=1;
+       var Qty=1;
        let userCart=await client.db('shopping-cart').collection('cart').findOne({user:new objectId(userId)})
        if(userCart){
        client.db('shopping-cart').collection('cart').updateOne({user:new objectId(userId)},{
       
-         $push:{products:[new objectId(proId),gty]}
+         $push:{products:[{product:new objectId(proId),Qty:Qty}]}
        } 
        ).then((response)=>{
          resolve()
@@ -88,7 +88,7 @@ module.exports={
        else{
        let userObj={
          user:new objectId(userId), 
-         products:[new objectId(proId)] 
+         products:[{product:new objectId(proId),Qty:Qty}]
        }
     
      
@@ -114,7 +114,7 @@ module.exports={
             {
               $match:{
                 $expr:{
-                  $in:[['$_id',"$$prodlist"]]
+                  $in:['$_id',"$$prodlist"]
                 }
               }
                 
@@ -125,7 +125,7 @@ module.exports={
        }
        
        ]).toArray()
-       resolve(cartItems[0].cartItems)
+       resolve(cartItems)
      })
    }, 
    getCartCount:(userId)=>{
