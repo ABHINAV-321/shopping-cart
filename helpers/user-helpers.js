@@ -140,8 +140,18 @@ module.exports={
      })
    
    }, 
-   decreaseCartItem:(proId,userId)=>{
-     client.db('shopping-cart').collection('cart').findOne({user:new objectId(userId),})
+   addCartItem:(proId,userId)=>{
+     return new Promise(async(resolve, reject)=>{
+       let Qty= await client.db('shopping-cart').collection('cart').find({user:new objectId(userId),_id:new objectId(proId)})
+//  let   addQty=Qty.Qty++
+       console.log(Qty)
+     client.db('shopping-cart').collection('cart').updateOne({user:new objectId(userId)},{
+       $set:{
+         Qty:Qty
+       }
+     })
+     resolve()
+     }) 
    }
   
    
