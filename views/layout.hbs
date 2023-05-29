@@ -38,10 +38,10 @@
   //   alert(response)
       if(response.status){
         
-        let count=$('#count').html()
+        let count=$('#count-'+proId).html()
         count=parseInt(count)+1
-      
-        $('#count').html(count)
+     // alert('#count-'+proId)
+        $('#count-'+proId).html(count)
 //alert("count"+count)
       }else{
     //    alert(response)
@@ -60,8 +60,8 @@ function subCart(proId){
         
         let count=$('#count-'+proId).html()
         count=parseInt(count)-1
-      alert(count)
-        $('#count'+proId).html(count)
+   //   alert(count)
+        $('#count-'+proId).html(count)
 //alert("count"+count)
       }else{
     //    alert(response)
