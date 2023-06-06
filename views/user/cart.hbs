@@ -14,7 +14,7 @@
     <h7 class="text-info">₹ {{price}}</h7>
     <p class="card-text">{{des}}</p>
     {{/each}}
-<button class="btn btn-danger" onclick="subCart('{{item}}')">-</button>  <span id="count-{{item}}">  {{Qty}}  </span>  <button class="btn btn-success" onclick="addCart('{{item}}',1)">+</button><br><br>
+<button class="btn btn-danger" onclick="subCart('{{item}}','-1')">-</button>  <span id="count-{{item}}">  {{Qty}}  </span>  <button class="btn btn-success" onclick="addCart('{{item}}',1)">+</button><br><br>
     <a href="/order/{{_id}}" class="ml-3 btn btn-primary ">Order</a>
   </div>
 </div>

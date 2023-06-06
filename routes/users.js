@@ -64,7 +64,7 @@ router.get('/logout',(req, res)=>{
 router.get('/cart',loginCheck,async(req, res)=>{
 let cartCount=0
 if(req.session.user){
-// cartCount= await userHelper.getCartCount(req.session.user._id)}
+//cartCount= await userHelper.getCartCount(req.session.user._id)}
   let products=await userHelper.getCartProducts(req.session.user._id)
   console.log(products)
 res.render('./user/cart',{products,user:req.session.user})
@@ -81,9 +81,11 @@ router.get('/sub/:id',(req, res)=>{
   res.json({status:true})
 })
 router.get('/add/:id',(req, res)=>{
+//  console.log("post "+req.body)
+let data=req.body;
   userHelper.addCartItem(req.params.id,req.session.user._id).then(()=>{
 res.json({status:true})
-    console.log('added')
+    console.log(data)
   })
 })
 module.exports = router;

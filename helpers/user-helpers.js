@@ -172,9 +172,11 @@ let  products={
      }) 
    }, 
    decCartItem:(proId,userId)=>{
-     return new Promise((resolve, reject)=>{
+     return new Promise(async(resolve, reject)=>{
 
-       console.log('subbbbbbbbbbbb')
+  // let productData =await client.db('shopping-cart').collection('cart').findOne({"user":new objectId(userId),"products.item":new objectId(proId)})
+  // console.log(productData)
+     
      client.db('shopping-cart').collection('cart').findOneAndUpdate({"user":new objectId(userId),"products.item":new objectId(proId)},
      {
         $inc:{"products.$.Qty": -1}
