@@ -40,13 +40,15 @@ app.set('views', path.join(__dirname, 'views'));
 //app.engine('hbs', expressHbs());
 app.set('view engine', 'hbs');
 //app.engine('hbs',hbs({extname:'hbs',defaultLayout:'Layout',layoutsDir:__dirname+'/views/layout/',partialsDir:__dirname+'/views/partials/'}))
-app.use(session({secret:"key",cookie:{maxAge:600000}}))
+app.use(session({resave: true,
+saveUninitialized: true,secret:"key",cookie:{maxAge:600000}}))
 app.use(fileUpload());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use('/admin', adminRouter);
 app.use('/', usersRouter);

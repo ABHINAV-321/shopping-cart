@@ -142,22 +142,22 @@ let  products={
 
        
        ]).toArray()
-       console.log(cartItems)
+     //  console.log(cartItems)
        resolve(cartItems)
      })
    }, 
-/*   getCartCount:(userId)=>{
+  getCartCount:(userId)=>{
      return new Promise(async(resolve, reject)=>{
        let count=0;
      let user=await client.db('shopping-cart').collection('cart').findOne({user:new objectId(userId)})
      if(user){
-       count=user.products.length
+       count=Object.keys(user.products).length
      }
-   //  console.log(count)
+     console.log("count ="+count)
      resolve(count)
      })
    
-   }, */
+   }, 
   addCartItem:(proId,userId)=>{
      return new Promise((resolve, reject)=>{
 
@@ -171,11 +171,23 @@ let  products={
       })
      }) 
    }, 
-   decCartItem:(proId,userId)=>{
+   decCartItem:(proId,Qty,userId)=>{
      return new Promise(async(resolve, reject)=>{
 
   // let productData =await client.db('shopping-cart').collection('cart').findOne({"user":new objectId(userId),"products.item":new objectId(proId)})
   // console.log(productData)
+  console.log(Qty)
+  if(Qty==0){
+    client.db('shopping-cart').collection('cart').updateOne(
+      {user:new objectId(userId)},
+    {$pull:
+    {products:
+    {item:new objectId(proId)}
+    }
+    })
+//    console.log("removed")
+  }
+  else{
      
      client.db('shopping-cart').collection('cart').findOneAndUpdate({"user":new objectId(userId),"products.item":new objectId(proId)},
      {
@@ -184,9 +196,56 @@ let  products={
       }).then(()=>{
         resolve()
       })
-     }) 
-   }
+     }
+   }) 
+   }, 
+  totalPrice:(userId ,cartCount)=>{
+return new Promise(async(resolve, reject)=>{
+  if (cartCount!=0){
+  let total=await  client.db('shopping-cart').collection('cart').aggregate([
+         {
+         $match:{user:new objectId(userId)}
+       }, 
+       {
+         $unwind:"$products"
+       }, {
+         $project:{
+           item:"$products.item", 
+           Qty:"$products.Qty"
+         }
+       },
+       {
+       $lookup:{
+           from:"product", 
+           localField:"item", 
+           foreignField:"_id", 
+           as:"product"
+         }
+       }, 
+         {
+       $project:{
+           item:1, Qty:1, product:{$arrayElemAt:["$product",0]}
+         }
+         }, 
+         {
+           
+        $group:{
+           _id:null, 
+           total:{$sum:{$multiply:['$Qty','$product.price']}}
+         }
+       }
+
+              ]).toArray()
+  
+    
+       resolve(total[0].total)
+  }else{
+    resolve()
+  }
+     })
+  }
+
+}
   
    
    
-}

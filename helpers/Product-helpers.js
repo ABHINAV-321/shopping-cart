@@ -70,5 +70,16 @@ let id =product._id
       resolve(response)
     })
     }) 
+  }, 
+  removeCartProduct:(userId, proId) =>{
+    return new Promise((resolve, reject)=>{
+client.db('shopping-cart').collection('cart').updateOne(
+      {user:new objectId(userId)},
+    {$pull:
+    {products:
+    {item:new objectId(proId)}
+    }
+    })
+    })
   }
 }
