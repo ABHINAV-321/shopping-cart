@@ -176,7 +176,7 @@ let  products={
 
   // let productData =await client.db('shopping-cart').collection('cart').findOne({"user":new objectId(userId),"products.item":new objectId(proId)})
   // console.log(productData)
-  console.log(Qty)
+  //console.log(Qty)
   if(Qty==0){
     client.db('shopping-cart').collection('cart').updateOne(
       {user:new objectId(userId)},
@@ -185,6 +185,7 @@ let  products={
     {item:new objectId(proId)}
     }
     })
+    resolve()
 //    console.log("removed")
   }
   else{
@@ -243,6 +244,36 @@ return new Promise(async(resolve, reject)=>{
     resolve()
   }
      })
+  }, 
+  getCartProductsList:(userId)=>{
+    return new Promise(async(resolve, reject)=>{
+      let cart=await client.db('shopping-cart').collection('cart').findOne({user:new objectId(userId)})
+      resolve(cart.products)
+    })
+  }, 
+  placOrder:(order, product, totalPrice)=>{
+    return new Promise ((resolve, reject)=>{
+      console.log(order, product, totalPrice)
+      let status=order.paymentMethod==='COD'?'placed':'pending'
+      let orderObj={
+        deliveryDetails:{
+          address:order.address, 
+          mobile:order.mobile, 
+          pincode:order.pincode
+        }, 
+        userId:new objectId(order.userId), 
+        product:product, 
+        totalPrice:totalPrice, 
+        status:status
+      }
+      client.db('shopping-cart').collection('order').insertOne(orderObj).then((response)=>{
+ client.db('shopping-cart').collection('cart').deleteOne({user:new objectId(order.userId)}).then(()=>{
+   resolve()
+ })
+        
+      })
+   
+    })
   }
 
 }

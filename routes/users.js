@@ -72,12 +72,15 @@ router.get('/logout',(req, res)=>{
 })
 router.get('/cart',loginCheck,async(req, res)=>{
 let cartCount=0
+console.log('cart')
 if(req.session.user){
 cartCount= await userHelper.getCartCount(req.session.user._id)}
   let products=await userHelper.getCartProducts(req.session.user._id)
+  
+//  console.log(cartCount)
   let totalPrice=await userHelper.totalPrice(req.session.user._id,cartCount)
   
-res.render('./user/cart',{products,user:req.session.user,totalPrice})
+res.render('./user/cart',{products,user:req.session.user,totalPrice,cartCount})
 })
 router.get('/add-to-cart/:id', async (req, res)=>{
 //console.log('api log')
@@ -87,9 +90,13 @@ router.get('/add-to-cart/:id', async (req, res)=>{
   res.json({status:true})
   })
 })
-router.get('/sub/',(req, res)=>{
-  userHelper.decCartItem(req.query.id,req.query.Qty,req.session.user._id)
-  res.json({status:true})
+router.get('/sub/',async(req, res)=>{
+  
+let total= await userHelper.totalPrice(req.session.user._id,req.params.id)
+userHelper.decCartItem(req.query.id,req.query.Qty,req.session.user._id).then(()=>{
+  res.json({status:true,total})
+})
+  
 })
 router.get('/add/:id',async (req, res)=>{
 //  console.log("post "+req.body)
@@ -97,22 +104,23 @@ let data=req.body;
 console.log(req.params.id)
 
 //console.log("price"+totalPriceProduct)
-
-
-
   userHelper.addCartItem(req.params.id,req.session.user._id).then(async()=>{
 
 let total= await userHelper.totalPrice(req.session.user._id,req.params.id)
-console.log(total)
+//console.log(total)
 res.json({status:true,total})
    // console.log(data)
   })
 })
-router.get('/remove/',(req, res)=>{
+router.get('/remove/',async(req, res)=>{
  // console.log('f ok')
   id=req.query.id
-  productHelper.removeCartProduct(req.session.user._id,id)
-  res.redirect('/cart')
+  productHelper.removeCartProduct(req.session.user._id,id).then(()=>{
+    res.redirect('/cart' )
+console.log('removed')
+  })
+
+  
 })
 router.get('/order/',loginCheck,async (req, res)=>{
  let products=await userHelper.getCartProducts(req.session.user._id)
@@ -121,13 +129,16 @@ router.get('/order/',loginCheck,async (req, res)=>{
 cartCount= await userHelper.getCartCount(req.session.user._id)
   
   
-  res.render('./user/order',{products,totalPrice,cartCount})
+  res.render('./user/order',{products,totalPrice,cartCount,user:req.session.user})
 })
-router.get('/order/address/',(req, res)=>{
-  
-res.render('./user/address')
-})
-router.post('/address',(req, res)=>{
-  console.log(req.body)
+
+router.post('/place-order',async(req, res)=>{
+ // console.log(req.body)
+ let product=await userHelper.getCartProductsList(req.body.userId)
+ //console.log(product)
+ let totalPrice=await userHelper.totalPrice(req.body.userId)
+  userHelper.placOrder(req.body,product,totalPrice).then((response)=>{
+    res.json({status:true})
+ })
 })
 module.exports = router;

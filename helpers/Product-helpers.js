@@ -80,6 +80,7 @@ client.db('shopping-cart').collection('cart').updateOne(
     {item:new objectId(proId)}
     }
     })
+    resolve()
     })
   }
 }

@@ -17,14 +17,12 @@
     <p class="card-text">{{des}}</p>
 
  {{/each}}
+ <div class="float-left">
 <button class="btn btn-danger" onclick="subCart('{{item}}')">-</button>  <span id="count-{{item}}">  {{Qty}}  </span>  <button class="btn btn-success" onclick="addCart('{{item}}',1)">+</button>
-{{#each this.product}}
-<p class="btn btn-success mt-3 ml-2">₹{{price}}</p>
-{{/each}}
-<br><br>
+</div>
 <div>
    
-    <a href="/remove/?id={{item}}" class="btn btn-danger ">   remove     </a>
+    <a href="/remove/?id={{item}}" class="btn btn-danger ml-4">   remove     </a>
     <!--<a href="/order/" class="ml-3 btn btn-primary ml-1" >Buy this now</a><br>
    -->
     </div>
@@ -56,6 +54,17 @@
 }
 </style>
 {{else}}
-<h2>Cart is empty</h2>
+<div>
+  <h2>Cart is empty</h2>
+  <br>
+</div>
+<br>
+<br>
+<div>
+
+<a href="/" class="btn btn-primary mt-5">Shop Now</a>
+</div>
+
+
 {{/if}}
 </section>

@@ -42,6 +42,7 @@ let Qty=$('#count-'+proId).html()
         count=parseInt(count)-1
    //   alert(count)
         $('#count-'+proId).html(count)
+        $('#total').html(response.total)
         }
 //alert("count"+count)
       }else{
@@ -66,3 +67,19 @@ function addToCart(proId){
     }
   })
 }
+
+
+
+
+$("#checkout-form").submit((e)=>{
+    e.preventDefault()
+ /*   alert('hi')*/
+    $.ajax({
+      url:'/place-order', 
+      method:'post', 
+      data:$('#checkout-form').serialize(), 
+      success:(response)=>{
+        alert(response)
+      }
+    })
+  })
