@@ -41,7 +41,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 //app.engine('hbs',hbs({extname:'hbs',defaultLayout:'Layout',layoutsDir:__dirname+'/views/layout/',partialsDir:__dirname+'/views/partials/'}))
 app.use(session({resave: true,
-saveUninitialized: true,secret:"key",cookie:{maxAge:600000}}))
+saveUninitialized: true,secret:"key",cookie:{maxAge:60000000}}))
 app.use(fileUpload());
 app.use(logger('dev'));
 app.use(express.json());

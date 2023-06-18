@@ -253,14 +253,17 @@ return new Promise(async(resolve, reject)=>{
   }, 
   placOrder:(order, product, totalPrice)=>{
     return new Promise ((resolve, reject)=>{
-      console.log(order, product, totalPrice)
-      let status=order.paymentMethod==='COD'?'placed':'pending'
+let date = new Date().toLocaleDateString("en-IN");
+//console.log(date);
+     // console.log(order, product, totalPrice)
+      let status=order.paymentMethod==='COD'?'Order Placed':'pending'
       let orderObj={
         deliveryDetails:{
           address:order.address, 
           mobile:order.mobile, 
           pincode:order.pincode
         }, 
+        date:date, 
         userId:new objectId(order.userId), 
         product:product, 
         totalPrice:totalPrice, 
@@ -274,7 +277,61 @@ return new Promise(async(resolve, reject)=>{
       })
    
     })
-  }
+  }, 
+ /* getOrders:(userId)=>{
+    return new Promise(async(resolve, reject)=>{
+let orders= await client.db('shopping-cart').collection('order').findOne({userId:new objectId(userId)})
+ 
+       resolve(orders)
+    })
+  }, */
+   getUserOrders:(userId) =>{
+     return new Promise(async(resolve, reject)=>{
+  let cartItems=await  client.db('shopping-cart').collection('order').aggregate([
+         {
+         $match:{userId:new objectId(userId)}
+       }, 
+       {
+         $unwind:"$product"
+       }, {
+         $project:{
+           item:"$product.item", 
+           Qty:"$product.Qty", 
+           date:"$date", 
+           deliveryDetails:"$deliveryDetails", 
+           totalPrice:"$totalPrice", 
+           status:"$status", 
+           userId:"$userId"
+         }
+       },
+       {
+       $lookup:{
+           from:"product", 
+           localField:"item", 
+           foreignField:"_id", 
+           as:"product"
+         }
+       }
+
+       
+       ]).toArray()
+       console.log(cartItems)
+       resolve(cartItems)
+     })
+   }, 
+   getProduct:(proId)=>{
+     return new Promise (async(resolve, reject)=>{
+    product=await client.db('shopping-cart').collection('product').findOne({_id:new objectId(proId)})
+    resolve(product)
+     }) 
+   }, 
+   getOrderDetails:(userId)=>{
+     return new Promise(async(resolve, reject)=>{
+     let  details=await  client.db('shopping-cart').collection('order').findOne({userId:new objectId(userId)})
+     resolve(details)
+     })
+   }
+  
 
 }
   
