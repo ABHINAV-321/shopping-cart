@@ -135,10 +135,22 @@ cartCount= await userHelper.getCartCount(req.session.user._id)
 router.post('/place-order',async(req, res)=>{
  // console.log(req.body)
  let product=await userHelper.getCartProductsList(req.body.userId)
- //console.log(product)
+ 
+  let orderDetails= await userHelper.getOrderDetails(req.session.user._id)
  let totalPrice=await userHelper.totalPrice(req.body.userId)
-  userHelper.placOrder(req.body,product,totalPrice).then((response)=>{
-    res.json({status:true})
+  userHelper.placeOrder(req.body,product,totalPrice).then((respons)=>{
+   console.log(req.body.paymentMethod)
+    if(req.body['paymentMethod']=="COD"){
+      console.log('pay')
+      res.json({status:true})
+   // res.json({cod:true})
+   }
+    else{
+userHelper.generateRazorPay(orderDetails._id,totalPrice).then((response)=>{
+  res.json({response})
+})
+      
+    }
  })
 })
 router.get('/place-order/success',(req, res)=>{
