@@ -4,6 +4,19 @@ var objectId=require('mongodb').ObjectId
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 
 
+var objectId=require('mongodb').ObjectId
+const Razorpay = require('razorpay');
+var instance = new Razorpay({
+  key_id: 'rzp_test_1j9NAXYvf2fWEB',
+  key_secret: 'hyxExcF2Zbi3MQm3ehPieEHu',
+});
+/////have to change this to function verifyPayment
+
+const crypto=require('crypto')
+  const hmac =crypto.createHmac('sha256','hyxExcF2Zbi3MQm3ehPieEHu')
+  
+  
+
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -251,7 +264,7 @@ return new Promise(async(resolve, reject)=>{
       resolve(cart.products)
     })
   }, 
-  placOrder:(order, product, totalPrice)=>{
+  placeOrder:(order, product, totalPrice)=>{
     return new Promise ((resolve, reject)=>{
 let date = new Date().toLocaleDateString("en-IN");
 //console.log(date);
@@ -330,7 +343,43 @@ let orders= await client.db('shopping-cart').collection('order').findOne({userId
      let  details=await  client.db('shopping-cart').collection('order').findOne({userId:new objectId(userId)})
      resolve(details)
      })
-   }
+   }, 
+generateRazorPay:(orderId, totalPrice)=>{
+     return new Promise((resolve, reject)=>{
+var options = {
+  amount:totalPrice*100,  // amount in the smallest currency unit
+  currency: "INR",
+  receipt:""+orderId
+};
+instance.orders.create(options, function(err, order) {
+  if (err){
+    console.log(err)
+  }else{
+  console.log(order);
+  resolve(order)
+  }
+});
+
+     })
+   },
+   verifyPayment:(details)=>{
+     console.log(details)
+   console.log('hi '+details.razorpay_payment_id)
+  console.log('function is eorking hhh')
+  console.log(details['order[response][id]'],details[payment[razorpay_payment_id]])
+  hmac.update(details.order['order[response][id]']+'|'+details.payment['payment[razorpay_payment_id]'])
+
+  hmac=hmac.digest('hex')
+  if(hmac==details.payment['payment[razorpay_signature]']){
+    resolve()
+  }else{
+    reject()
+  }
+
+   
+
+
+}
   
 
 }
