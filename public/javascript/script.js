@@ -82,7 +82,58 @@ $("#checkout-form").submit((e)=>{
         alert(response)
         if(response.status){
           location.href='/place-order/success/'
+        }else{
+          razorPay(response)
         }
       }
     })
   })
+function razorPay(order){
+ // console.log(order)
+ // alert(order.response.amount)
+    var options = {
+    "key": "rzp_test_1j9NAXYvf2fWEB", // Enter the Key ID generated from the Dashboard
+    "amount": order.response.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "pack of peer",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id":order.response.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+    //    alert(response.razorpay_payment_id);
+  //      alert(response.razorpay_order_id);
+     //   alert(response.razorpay_signature)
+
+        verifyPayment(response, order)
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.open();
+}
+  
+function verifyPayment(payment, order){
+    let details=[{payment}, {order}]
+    alert(details)
+    alert(payment.razorpay_payment_id)
+    console.log(payment.razorpay_payment_id)
+    $.ajax({
+      url:'/verify-payment',
+      method:'post',
+      data:{
+           paymentDetails:payment,
+           orderDetails:order
+           
+      }
+    })
+  }
