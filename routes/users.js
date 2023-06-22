@@ -171,4 +171,11 @@ let  proId=req.params.id
   res.render('./user/product-details',{user:req.session.user,product,orderDetails})
 //  console.log(orderDetails,product)
 })
+router.post('/verify-payment',loginCheck, (req, res)=>{
+  console.log("verifyPayment")
+ // console.log(req.body)
+  userHelper.verifyPayment(req.body).then(()=>{
+    console.log('ok')
+  })
+})
 module.exports = router;

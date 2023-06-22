@@ -10,10 +10,9 @@ var instance = new Razorpay({
   key_id: 'rzp_test_1j9NAXYvf2fWEB',
   key_secret: 'hyxExcF2Zbi3MQm3ehPieEHu',
 });
-/////have to change this to function verifyPayment
 
-const crypto=require('crypto')
-  const hmac =crypto.createHmac('sha256','hyxExcF2Zbi3MQm3ehPieEHu')
+
+
   
   
 
@@ -363,25 +362,32 @@ instance.orders.create(options, function(err, order) {
      })
    },
    verifyPayment:(details)=>{
+     return new Promise((resolve, reject)=>{
+       
+     
      console.log(details)
-   console.log('hi '+details.razorpay_payment_id)
-  console.log('function is eorking hhh')
-  console.log(details['order[response][id]'],details[payment[razorpay_payment_id]])
-  hmac.update(details.order['order[response][id]']+'|'+details.payment['payment[razorpay_payment_id]'])
+
+const crypto=require('crypto')
+  let hmac =crypto.createHmac('sha256','hyxExcF2Zbi3MQm3ehPieEHu')
+  
+  
+  hmac.update(details.id+'|'+details.razorpay_payment_id)
 
   hmac=hmac.digest('hex')
-  if(hmac==details.payment['payment[razorpay_signature]']){
+  if(hmac==details.razorpay_signature){
+    console.log('payment successful')
     resolve()
   }else{
+    console.log('reject')
     reject()
   }
 
    
 
 
-}
-  
 
+   }) 
+}
 }
   
    

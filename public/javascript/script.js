@@ -1,4 +1,22 @@
-
+$("#checkout-form").submit((e)=>{
+  alert('hi')
+    e.preventDefault()
+ //   alert('hi')
+    $.ajax({
+      url:'/place-order', 
+      method:'post', 
+      data:$('#checkout-form').serialize(), 
+      success:(response)=>{
+        alert(response.response.amount)
+        if(response.status){
+          location.href='/place-order/success/'
+        }else{
+          
+          razorPay(response)
+        }
+      }
+    })
+  })
 function addCart(proId){
     console.log('function ok')
  $.ajax({
@@ -70,27 +88,12 @@ function addToCart(proId){
 
 
 
-
-$("#checkout-form").submit((e)=>{
-    e.preventDefault()
- /*   alert('hi')*/
-    $.ajax({
-      url:'/place-order', 
-      method:'post', 
-      data:$('#checkout-form').serialize(), 
-      success:(response)=>{
-        alert(response)
-        if(response.status){
-          location.href='/place-order/success/'
-        }else{
-          razorPay(response)
-        }
-      }
-    })
-  })
 function razorPay(order){
  // console.log(order)
  // alert(order.response.amount)
+ let details ={
+   
+ }
     var options = {
     "key": "rzp_test_1j9NAXYvf2fWEB", // Enter the Key ID generated from the Dashboard
     "amount": order.response.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -103,7 +106,7 @@ function razorPay(order){
     //    alert(response.razorpay_payment_id);
   //      alert(response.razorpay_order_id);
      //   alert(response.razorpay_signature)
-
+        
         verifyPayment(response, order)
     },
     "prefill": {
@@ -120,19 +123,28 @@ function razorPay(order){
 };
 var rzp1 = new Razorpay(options);
 rzp1.open();
-}
-  
-function verifyPayment(payment, order){
-    let details=[{payment}, {order}]
-    alert(details)
+  }
+  function verifyPayment(payment, order){
+   // let details=[{payment}, {order}]
+  //  alert(details)
     alert(payment.razorpay_payment_id)
     console.log(payment.razorpay_payment_id)
     $.ajax({
-      url:'/verify-payment',
-      method:'post',
+      url:'/verify-payment', 
+      method:'post', 
       data:{
-           paymentDetails:payment,
-           orderDetails:order
+           razorpay_payment_id:payment.razorpay_payment_id,
+           razorpay_order_id:payment.razorpay_order_id, 
+           razorpay_signature:payment.razorpay_signature, 
+           id:order.response.id, 
+           entity:order.response.entity, 
+   amount:order.response.amount, 
+   amount_paid:order.response.amount_paid, 
+   amount_due:order.response.amount_due, 
+   currency:order.response.currency, 
+   receipt:order.response.receipt, 
+   status:order.response.status
+          // order
            
       }
     })
