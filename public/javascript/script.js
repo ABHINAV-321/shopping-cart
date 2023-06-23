@@ -1,5 +1,5 @@
 $("#checkout-form").submit((e)=>{
-  alert('hi')
+ // alert('hi')
     e.preventDefault()
  //   alert('hi')
     $.ajax({
@@ -7,7 +7,7 @@ $("#checkout-form").submit((e)=>{
       method:'post', 
       data:$('#checkout-form').serialize(), 
       success:(response)=>{
-        alert(response.response.amount)
+     //   alert(response.response.amount)
         if(response.status){
           location.href='/place-order/success/'
         }else{
@@ -41,7 +41,7 @@ function addCart(proId){
  }) 
   }
 function subCart(proId){
-    console.log('function ok')
+   // console.log('function ok')
 let Qty=$('#count-'+proId).html()
         Qty=parseInt(Qty)-1
  $.ajax({
@@ -125,10 +125,7 @@ var rzp1 = new Razorpay(options);
 rzp1.open();
   }
   function verifyPayment(payment, order){
-   // let details=[{payment}, {order}]
-  //  alert(details)
-    alert(payment.razorpay_payment_id)
-    console.log(payment.razorpay_payment_id)
+
     $.ajax({
       url:'/verify-payment', 
       method:'post', 
@@ -143,9 +140,18 @@ rzp1.open();
    amount_due:order.response.amount_due, 
    currency:order.response.currency, 
    receipt:order.response.receipt, 
-   status:order.response.status
-          // order
+   status:order.response.status, 
+   attempts:order.response.attempts, 
+   notes:order.response.notes, 
+   created_at:order.response.created_at, 
+   offer_id:order.response.offer_id
+
            
+      }, 
+      success:(response)=>{
+        if(response.status){
+          location.href('/place-order/success')
+        }
       }
     })
   }

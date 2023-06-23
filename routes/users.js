@@ -175,7 +175,13 @@ router.post('/verify-payment',loginCheck, (req, res)=>{
   console.log("verifyPayment")
  // console.log(req.body)
   userHelper.verifyPayment(req.body).then(()=>{
-    console.log('ok')
-  })
+    userHelper.changeOrderStatus(req.body.receipt).then(()=>{
+      console.log('place order')
+      res.json({status:true})
+    })
+  }).catch((err)=>{
+    console.log(err)
+    res.json({status:false})
+  }) 
 })
 module.exports = router;

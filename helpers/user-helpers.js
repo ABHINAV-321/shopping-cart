@@ -387,6 +387,18 @@ const crypto=require('crypto')
 
 
    }) 
+}, 
+changeOrderStatus:(orderId)=>{
+  return new Promise((resolve, reject)=>{
+    client.db('shopping-cart').collection('order').updateOne({_id:new objectId(orderId)},{
+      $set: {
+           status:"Order Placed"
+  },
+  $currentDate: { lastUpdated: true }
+}).then(()=>{
+  resolve()
+})
+  })
 }
 }
   
