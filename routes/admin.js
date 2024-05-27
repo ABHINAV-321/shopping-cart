@@ -15,7 +15,9 @@ res.render('./admin/view-products', {product,admin:true});
 router.get('/add-product',(req,res)=>{
   res.render('./admin/add-product',{admin:true})
 })
-router.post('/add-product',(req,res)=>{  productHelper.addProduct(req.body,(id)=>{
+router.post('/add-product',(req,res)=>{ 
+  req.body.price=parseInt(req.body.price, 10);
+  productHelper.addProduct(req.body,(id)=>{
    // console.log(id)
     const image = req.files;
    
