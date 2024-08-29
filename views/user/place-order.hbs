@@ -1,0 +1,53 @@
+<section>
+    <div class="container mt5">
+    <div>
+        <form action="/place-order" class="checkout-form" method="post">
+            <div class="row">
+                <div class="col-md-5"><br>
+                    <h2>Enter your details </h2><br><br>
+                    <div>
+                       <h5> <label>Address</label></h5>
+                        <input class="form-control" type="text" id="address" name="address" value="type your address">
+                        <label><b>Pincode</b></label>
+                        <input class="form-control" type="number" id="pincode" name="pincode">
+                        <label><b>Mobile</b></label>
+                        <input class="form-control" type="number" id="mobile" name="mobile">
+                       
+                    </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="container mt-5 ml-5 p-5 checkout border ">
+                            <h5>Total Amount :  Rs.{{product.price}}</h5>
+                            <hr>
+                            <div class="payment">
+                               <b> <p>Payment method</p></b>
+                                <label class="radio-inline">
+                                    <input type="radio" name="payment-method" value="COD" checked>COD
+                                </label><br>
+                                <label class="radio-inline">
+                                    <input type="radio" name="payment-method" value="Online" >Online
+                                </label>
+                                
+                                <input type="hidden" value="{{product._id}}" name="id" id="id"><br><br>
+                                <button class="btn btn-primary ml-5 pl-4 pr-4" type="submit" >Order</button>
+                            </div>
+                        </div>
+                    </div>
+            </div>       
+        </form>
+    </div>
+</div> 
+</section>
+<!--<script>
+    $("#checkout-form").submit((e)=>{
+        e.preventDefault()
+        $.ajax({
+            url:'place-order',
+            method:'post',
+            data:$('#checkout-form').serialize(),
+            success:(response)=>{
+                alert(response)
+            }
+        })
+    })
+</script>-->

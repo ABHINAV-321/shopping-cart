@@ -121,7 +121,7 @@ module.exports={
             }], 
             as:'cartItems'
            
-         }
+         } 
        }
        
        ]).toArray()
@@ -142,6 +142,27 @@ module.exports={
    }, 
    decreaseCartItem:(proId,userId)=>{
      client.db('shopping-cart').collection('cart').findOne({user:new objectId(userId),})
+   },
+   placeOrder:(order,product,userId)=>{
+    
+    let status =order['payment-method']==='COD'?'placed':'pending'
+    let orderObj={
+      deliveryDetails:{
+        mobile:order.mobile,
+        address:order.address,
+        pincode:order.pincode
+      },
+      userId:new objectId(userId),
+      paymentMethod:order['payment-method'],
+      product:product,
+      status:status
+    }
+
+
+    client.db('shopping-cart').collection('order').insertOne(orderObj).then((response)=>{
+      //resolve()
+    })
+    console.log(orderObj)
    }
   
    

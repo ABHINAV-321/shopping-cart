@@ -10,6 +10,7 @@ if(req.session.loggedIn){
   else{
     res.redirect('/login')
   }
+
 }
 
 /* GET home page. */
@@ -69,7 +70,9 @@ let cartCount=0
 if(req.session.user){
  cartCount= await userHelper.getCartCount(req.session.user._id)}
   let products=await userHelper.getCartProducts(req.session.user._id)
-  console.log(products)
+  console.log(products+"hey")
+  //console.log(JSON.stringify(products,null,2)) 
+  console.table(products)
 res.render('./user/cart',{products,user:req.session.user,cartCount})
 })
 router.get('/add-to-cart/:id',loginCheck, (req, res)=>{
@@ -80,5 +83,24 @@ router.get('/add-to-cart/:id',loginCheck, (req, res)=>{
 })
 router.get('/sub/:id',(req, res)=>{
   userHelper.decreaseCartItem(req.params.id,req.session.user._id)
+})
+
+
+// order the products 
+
+router.get('/order/:id',loginCheck,async(req,res)=>{
+   product= await productHelper.getProduct(req.params.id)
+ 
+  let userId = req.session.user._id
+  res.render('user/place-order',{product,userId})
+})
+
+router.post('/place-order',async(req,res)=>{
+  product = await productHelper.getProduct(req.body.id)
+  // console.log(req.body,product,req.body.userId)
+   await userHelper.placeOrder(req.body,product,req.session.user._id)//.then((response)=>{})
+   res.render('./user/order-success')
+  
+ 
 })
 module.exports = router;
