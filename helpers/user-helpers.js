@@ -1,6 +1,12 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://abhi:hacker.abhi@cluster0.rfzif0y.mongodb.net/?retryWrites=true&w=majority";
 var objectId=require('mongodb').ObjectId
+const Razorpay=require('razorpay')
+var instance = new Razorpay({
+  key_id:'rzp_test_dUN35Lu6Iup3XU',
+  key_secret:'KGecWqYncHjeNz3lTSaDnymp',
+
+})
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 
 
@@ -13,7 +19,10 @@ const client = new MongoClient(uri, {
 });
 var db=require('../Config/connection').get
 const bcrypt = require('bcrypt');
+
 module.exports={
+
+
    doSignup:(userData)=>{
      return new Promise(async(resolve, reject)=>{
     //  console.log(userData)
@@ -144,6 +153,7 @@ module.exports={
      client.db('shopping-cart').collection('cart').findOne({user:new objectId(userId),})
    },
    placeOrder:(order,product,userId)=>{
+    return new Promise(async(resolve, reject)=>{
     
     let status =order['payment-method']==='COD'?'placed':'pending'
     let orderObj={
@@ -160,11 +170,32 @@ module.exports={
 
 
     client.db('shopping-cart').collection('order').insertOne(orderObj).then((response)=>{
-      //resolve()
+      
+      resolve(response.insertedId.toString())
+      
     })
-    console.log(orderObj)
-   }
-  
    
+   })
+  
+  },
+  generateRazorpay:(orderId)=>{
+    return new Promise((resolve,reject)=>{
+     
+      var options ={
+        amount: 5000,
+        currency:"INR",
+        receipt:orderId,
+      }
+      instance.orders.create(options,(err,order)=>{
+        if(err){
+          console.log(err)
+        }else{
+          console.log(order)
+          resolve(order)
+        }
+      })
+
+    })
+  }
    
 }

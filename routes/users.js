@@ -97,10 +97,18 @@ router.get('/order/:id',loginCheck,async(req,res)=>{
 
 router.post('/place-order',async(req,res)=>{
   product = await productHelper.getProduct(req.body.id)
-  // console.log(req.body,product,req.body.userId)
-   await userHelper.placeOrder(req.body,product,req.session.user._id)//.then((response)=>{})
-   res.render('./user/order-success')
   
+   await userHelper.placeOrder(req.body,product,req.session.user._id).then((orderId)=>{
+   if(req.body['payment-method']==='COD'){
+    res.json(status:"sccuss")
+   
+   }else{
+    console.log("order",orderId)
+    userHelper.generateRazorpay(orderId).then((response)=>{
+
+    })
+   }
+  })
  
 })
 module.exports = router;
