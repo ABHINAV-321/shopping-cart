@@ -1,1 +1,56 @@
-success<h2>woww</h2>
+<body>
+
+    <div class="success-container">
+        <div class="success-message">
+            Order Successful!
+        </div>
+       <a href="/"><button class="button"> Go to Homepage</button></a>
+    </div>
+<style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Prevent scrolling on the success screen */
+        }
+
+        .success-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: rgba(0, 128, 0, 0.1); /* Light green background */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .success-message {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>

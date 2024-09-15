@@ -198,16 +198,17 @@ module.exports = {
 
     })
   },
-  verifyPAyment: (order) => {
+  verifyPayment: (order) => {
     return new Promise((resolve, reject) => {
 
       const crypto = require('crypto');                //added crypto module to check the payment sha256 signature
-      const hmac = crypto.createHmac('sha256', 'KGecWqYncHjeNz3lTSaDnymp');
+      let hmac = crypto.createHmac('sha256', 'KGecWqYncHjeNz3lTSaDnymp');
       
-      hmac.update(order['payment[razorpay_order_id]'] + "|" + order['payment[razorpay_payment_id]'], 'KGecWqYncHjeNz3lTSaDnymp');
+      hmac.update(order['payment[razorpay_order_id]'] + "|" + order['payment[razorpay_payment_id]']);
       const hash = hmac.digest('hex');
-    
-      if (hmac == order['payment[razorpay_signature]']) {
+      console.log(order['payment[razorpay_signature]'])
+      console.log(hash)
+      if (hash == order['payment[razorpay_signature]']) {
         resolve();
       }else{
         reject();
@@ -216,12 +217,13 @@ module.exports = {
   },
   changePaymentStatus:(orderId)=>{
     return new Promise((resolve,reject)=>{
-      client.db('shopping-cart').collection('order').updateOne({_id:objectId(orderId)}),
+      console.log(orderId)
+      client.db('shopping-cart').collection('order').updateOne({_id:new objectId(orderId)},
       {
         $set:{
           status:'placed'
         }
-      }.then(()=>{
+      }).then(()=>{
         resolve();
       })
     })
