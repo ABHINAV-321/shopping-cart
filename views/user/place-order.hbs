@@ -1,43 +1,261 @@
-<section>
-    <div class="container mt5">
-    <div>
-        <form action="" id="checkout-form" >
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="card shadow-lg border-0 scale-in" style="border-radius: 16px;">
+        <div class="card-header bg-gradient-info text-white text-center py-4" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;">
+          <i class="bi bi-credit-card-2-front display-3 mb-2"></i>
+          <h2 class="mb-0">Place Your Order</h2>
+          <p class="mb-0 opacity-75">Complete your purchase</p>
+        </div>
+
+        <div class="card-body p-4">
+          <form id="checkout-form">
             <div class="row">
-                <div class="col-md-5"><br>
-                    <h2>Enter your details </h2><br><br>
-                    <div>
-                       <h5> <label>Address</label></h5>
-                        <input class="form-control" type="text" id="address" name="address" >
-                        <label><b>Pincode</b></label>
-                        <input class="form-control" type="number" id="pincode" name="pincode">
-                        <label><b>Mobile</b></label>
-                        <input class="form-control" type="number" id="mobile" name="mobile">
-                       
-                    </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="container mt-5 ml-5 p-5 checkout border ">
-                            <h5>Total Amount :  Rs.{{product.price}}</h5>
-                            <hr>
-                            <div class="payment">
-                               <b> <p>Payment method</p></b>
-                                <label class="radio-inline">
-                                    <input type="radio" name="payment-method" value="COD" checked>COD
-                                </label><br>
-                                <label class="radio-inline">
-                                    <input type="radio" name="payment-method" value="Online" >Online
-                                </label>
-                                
-                                <input type="hidden" value="{{product._id}}" name="id" id="id"><br><br>
-                                <button class="btn btn-primary ml-5 pl-4 pr-4" type="submit" >Order</button>
-                            </div>
+              <!-- Left Column - Delivery Details -->
+              <div class="col-md-7 mb-4 mb-md-0">
+                <h4 class="mb-4 text-info">
+                  <i class="bi bi-geo-alt mr-2"></i>Delivery Details
+                </h4>
+
+                <div class="form-group mb-3">
+                  <label for="address" class="form-label font-weight-bold">
+                    <i class="bi bi-house-door mr-2 text-muted"></i>Address
+                  </label>
+                  <textarea
+                    class="form-control"
+                    id="address"
+                    name="address"
+                    rows="3"
+                    placeholder="Enter your full delivery address"
+                    required
+                    style="border-radius: 8px;"
+                  ></textarea>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="pincode" class="form-label font-weight-bold">
+                      <i class="bi bi-pin mr-2 text-muted"></i>Pincode
+                    </label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="pincode"
+                      name="pincode"
+                      placeholder="6-digit pincode"
+                      required
+                      minlength="6"
+                      maxlength="6"
+                    >
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="mobile" class="form-label font-weight-bold">
+                      <i class="bi bi-telephone mr-2 text-muted"></i>Mobile Number
+                    </label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="mobile"
+                      name="mobile"
+                      placeholder="10-digit mobile"
+                      required
+                      minlength="10"
+                      maxlength="10"
+                    >
+                  </div>
+                </div>
+
+                <input type="hidden" name="id" id="product-id" value="{{product._id}}">
+              </div>
+
+              <!-- Right Column - Order Summary -->
+              <div class="col-md-5">
+                <div class="order-summary p-4 rounded" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; height: 100%;">
+                  <h4 class="mb-4 text-dark">
+                    <i class="bi bi-receipt mr-2"></i>Order Summary
+                  </h4>
+
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="font-weight-bold">Product:</span>
+                    <span class="text-truncate ml-3 text-right" style="max-width: 60%;">{{product.name}}</span>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="font-weight-bold">Price:</span>
+                    <span class="text-info font-weight-bold">₹ {{product.price}}</span>
+                  </div>
+
+                  <hr class="my-4">
+
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="mb-0 font-weight-bold">Total Amount:</h5>
+                    <h3 class="mb-0 text-success font-weight-bold">₹ {{product.price}}</h3>
+                  </div>
+
+                  <hr class="my-4">
+
+                  <h5 class="mb-3">
+                    <i class="bi bi-credit-card mr-2"></i>Payment Method
+                  </h5>
+
+                  <div class="payment-options">
+                    <div class="form-check mb-3 custom-radio">
+                      <input class="form-check-input" type="radio" name="payment-method" id="cod" value="COD" checked>
+                      <label class="form-check-label w-100 p-3 border rounded cursor-pointer d-flex align-items-center justify-content-between" for="cod" style="background-color: white; border: 2px solid #28a745; transition: all 0.3s ease;">
+                        <div>
+                          <i class="bi bi-cash-stack text-success mr-2 display-5"></i>
+                          <strong class="ml-2">Cash on Delivery</strong>
                         </div>
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5rem; opacity: 0; transition: opacity 0.3s ease;"></i>
+                      </label>
                     </div>
-            </div>       
-        </form>
+
+                    <div class="form-check mb-4 custom-radio">
+                      <input class="form-check-input" type="radio" name="payment-method" id="online" value="Online">
+                      <label class="form-check-label w-100 p-3 border rounded cursor-pointer d-flex align-items-center justify-content-between" for="online" style="background-color: white; border: 2px solid #17a2b8; transition: all 0.3s ease;">
+                        <div>
+                          <i class="bi bi-credit-card text-info mr-2 display-5"></i>
+                          <strong class="ml-2">Online Payment</strong>
+                          <small class="d-block text-muted">(Razorpay Secure)</small>
+                        </div>
+                        <i class="bi bi-check-circle-fill text-info" style="font-size: 1.5rem; opacity: 0; transition: opacity 0.3s ease;"></i>
+                      </label>
+                    </div>
+                  </div>
+
+                  <button class="btn btn-info btn-lg btn-block text-white font-weight-bold py-3" type="submit" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); border: none; border-radius: 8px; transition: all 0.3s ease;">
+                    <i class="bi bi-lightning-charge mr-2"></i> Place Order
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-</div> 
-</section>
+  </div>
+</div>
+
+<style>
+  .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+    border-color: #17a2b8;
+  }
+
+  .custom-radio label {
+    cursor: pointer;
+  }
+
+  .custom-radio input:checked + label {
+    background-color: #e6f9ff !important;
+  }
+
+  .custom-radio input:checked + label i:last-child {
+    opacity: 1 !important;
+  }
+
+  .order-summary {
+    border: 1px solid #dee2e6 !important;
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  $(document).ready(function() {
+    // Show/hide loading state on form submit
+    $('#checkout-form').submit(function(e) {
+      e.preventDefault();
+
+      const submitBtn = $(this).find('button[type="submit"]');
+      const originalText = submitBtn.html();
+      submitBtn.html('<span class="spinner"></span> Processing...');
+      submitBtn.prop('disabled', true);
+
+      $.ajax({
+        url: '/place-order',
+        method: 'post',
+        data: $('#checkout-form').serialize(),
+        success: function(response) {
+          submitBtn.html(originalText);
+          submitBtn.prop('disabled', false);
+
+          if (response.status) {
+            // COD success
+            window.location.href = '/order-success';
+          } else {
+            // Razorpay online payment
+            razorpay(response.response);
+          }
+        },
+        error: function(err) {
+          submitBtn.html(originalText);
+          submitBtn.prop('disabled', false);
+          alert('Something went wrong. Please try again.');
+          console.error(err);
+        }
+      });
+    });
+
+    // Payment option hover effect
+    $('.custom-radio label').hover(
+      function() {
+        $(this).css('transform', 'translateY(-2px)');
+      },
+      function() {
+        $(this).css('transform', 'translateY(0)');
+      }
+    );
+  });
+
+  function razorpay(order) {
+    var options = {
+      "key": "rzp_test_dUN35Lu6Iup3XU",
+      "amount": order.amount,
+      "currency": "INR",
+      "name": "Shopping Cart",
+      "description": "Test Transaction",
+      "image": "https://via.placeholder.com/100x100?logo",
+      "order_id": order.id,
+      "handler": function (response) {
+        verifyPayment(response, order);
+      },
+      "prefill": {
+        "name": "{{user.Name}}",
+        "email": "{{user.Email}}",
+        "contact": "{{user.phone}}"
+      },
+      "notes": {
+        "address": document.getElementById('address').value
+      },
+      "theme": {
+        "color": "#17a2b8"
+      }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+  }
+
+  function verifyPayment(payment, order) {
+    $.ajax({
+      url: '/verify-payment',
+      method: 'post',
+      data: { payment, order },
+      success: function(response) {
+        if (response.status) {
+          window.location.href = '/order-success';
+        } else {
+          alert('Payment failed. Please try again.');
+        }
+      },
+      error: function() {
+        alert('Verification failed.');
+      }
+    });
+  }
+</script>
 
 <script>
     $("#checkout-form").submit((e)=>{

@@ -25,6 +25,15 @@ filenames.forEach(function (filename) {
   var template = fs.readFileSync(partialsDir + '/' + filename, 'utf8');
   hbs.registerPartial(name, template);
 });
+
+// Register custom helpers
+hbs.registerHelper('multiply', function(a, b) {
+  return a * b;
+});
+
+hbs.registerHelper('encodeURI', function(str) {
+  return encodeURI(str);
+});
 //var expressHbs = require('express-handlebars');
 
 //db connection

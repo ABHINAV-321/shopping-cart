@@ -1,45 +1,212 @@
-  <header>
-    
-<nav class="navbar navbar-expand-lg navbar-light bg-info" style=" position:relative; top:0; width:100%; ">
-  <a class="navbar-brand" href="#"><b>Shopping cart </b></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<header class="transparent-navbar">
+  <nav class="navbar navbar-expand-lg" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1030; transition: all 0.4s ease; background: transparent; backdrop-filter: blur(0px); padding: 1rem 0;" id="mainNavbar">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center text-white" href="/" id="navbarBrand">
+        <i class="bi bi-cart3 mr-2" style="font-size: 1.5rem;"></i>
+        <strong class="brand-text">Shopping Cart</strong>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Products <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/cart">Cart  <span class="badge badge-success">{{cartCount}}</span></a>
-      </li>
-      {{#if user}}
-     <li class="nav-item">
-        <a class="nav-link" href="#">Orders</a>
-      </li>
-      {{else}}
-    {{/if}}
-    </ul>
-   <div class="dropdown">
-  <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    {{#if user}}
-    {{user.Name}}
-    {{else}}
-    Account
-    {{/if}}
-  </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link text-white" href="/">
+              <i class="bi bi-house-door mr-1"></i> Products
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link position-relative text-white" href="/cart">
+              <i class="bi bi-cart mr-1"></i> Cart
+              {{#if cartCount}}
+                <span class="badge badge-pill badge-light text-success position-absolute" style="top: -5px; right: -8px; font-size: 0.75rem; padding: 0.25rem 0.5rem; animation: pulse 2s infinite;">
+                  {{cartCount}}
+                </span>
+              {{/if}}
+            </a>
+          </li>
+          {{#if user}}
+          <li class="nav-item">
+            <a class="nav-link text-white" href="#">
+              <i class="bi bi-receipt mr-1"></i> Orders
+            </a>
+          </li>
+          {{/if}}
+        </ul>
 
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-  {{#if user}}
-    <a class="dropdown-item" href="/logout">Logout</a>
-  {{else}}
-    <a class="dropdown-item" href="/login">Login</a>
- <a class="dropdown-item" href="/signup">Signup</a>
- <a class="dropdown-item" href="/account">Account</a>
- {{/if}}
-  </div>
-</div>
-  </div>
-</nav>
-  </header>
+        <div class="dropdown">
+          <button class="btn dropdown-toggle px-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.5); border-radius: 25px;">
+            {{#if user}}
+              <i class="bi bi-person-circle mr-2"></i><span class="user-name">{{user.Name}}</span>
+            {{else}}
+              <i class="bi bi-person mr-2"></i> Account
+            {{/if}}
+          </button>
+
+          <div class="dropdown-menu dropdown-menu-right border-0 shadow-lg" aria-labelledby="dropdownMenuButton" style="border-radius: 12px; overflow: hidden;">
+            {{#if user}}
+              <a class="dropdown-item" href="/logout">
+                <i class="bi bi-box-arrow-right mr-2 text-danger"></i> Logout
+              </a>
+            {{else}}
+              <a class="dropdown-item" href="/login">
+                <i class="bi bi-box-arrow-in-right mr-2"></i> Login
+              </a>
+              <a class="dropdown-item" href="/signup">
+                <i class="bi bi-person-plus mr-2"></i> Signup
+              </a>
+              <a class="dropdown-item" href="/account">
+                <i class="bi bi-gear mr-2"></i> Account
+              </a>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<style>
+  /* Transparent navbar for hero dissolve effect */
+  .transparent-navbar .navbar {
+    background: transparent !important;
+    padding: 1.5rem 0 1rem;
+  }
+
+  .transparent-navbar .nav-link {
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin: 0 5px;
+    padding: 0.5rem 1rem !important;
+    opacity: 0.9;
+  }
+
+  .transparent-navbar .nav-link:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .transparent-navbar .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: white;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+  }
+
+  .transparent-navbar .nav-link:hover::after {
+    width: 80%;
+  }
+
+  .transparent-navbar .btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    transition: all 0.3s ease;
+  }
+
+  .transparent-navbar .btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 1) !important;
+    transform: translateY(-2px);
+  }
+
+  .transparent-navbar .brand-text {
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+  }
+
+  .transparent-navbar .dropdown-menu {
+    background: white;
+    border: none;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .transparent-navbar .dropdown-item {
+    transition: all 0.2s ease;
+    padding: 0.7rem 1.2rem;
+  }
+
+  .transparent-navbar .dropdown-item:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding-left: 1.5rem;
+  }
+
+  /* Default state - when page loads on homepage, navbar is transparent */
+  .transparent-navbar .navbar.scrolled {
+    background: rgba(23, 162, 184, 0.95) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 0.5rem 0;
+  }
+
+  .transparent-navbar .navbar.scrolled .nav-link,
+  .transparent-navbar .navbar.scrolled .btn-outline-light,
+  .transparent-navbar .navbar.scrolled .brand-text {
+    color: white !important;
+    opacity: 1;
+  }
+
+  /* For non-hero pages, use solid navbar */
+  .solid-navbar .navbar {
+    background: #17a2b8 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 0.75rem 0;
+  }
+
+  .solid-navbar .navbar .nav-link,
+  .solid-navbar .navbar .btn,
+  .solid-navbar .navbar .brand-text {
+    color: white !important;
+  }
+
+  .solid-navbar .nav-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .solid-navbar .btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .solid-navbar .btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Toggler color */
+  .transparent-navbar .navbar-toggler,
+  .solid-navbar .navbar-toggler {
+    border-color: rgba(255,255,255,0.5);
+  }
+
+  .transparent-navbar .navbar-toggler-icon,
+  .solid-navbar .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .transparent-navbar .navbar {
+      padding: 1rem 0;
+    }
+
+    .transparent-navbar .navbar.scrolled {
+      padding: 0.75rem 0;
+    }
+
+    .navbar-brand {
+      font-size: 1.2rem;
+    }
+
+    .user-name {
+      display: none;
+    }
+  }
+</style>

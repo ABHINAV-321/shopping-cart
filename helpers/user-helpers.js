@@ -19,7 +19,7 @@ const client = new MongoClient(uri, {
   }
 });
 var db = require('../Config/connection').get
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 module.exports = {
 
@@ -117,23 +117,31 @@ module.exports = {
           $match: { user: new objectId(userId) }
         },
         {
+          $unwind: "$products"
+        },
+        {
           $lookup: {
             from: 'product',
-            let: { prodlist: "$products" },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $in: ['$_id', "$$prodlist"]
-                  }
-                }
-
-              }],
-            as: 'cartItems'
-
+            localField: 'products.product',
+            foreignField: '_id',
+            as: 'productDetails'
+          }
+        },
+        {
+          $unwind: "$productDetails"
+        },
+        {
+          $group: {
+            _id: "$_id",
+            user: { $first: "$user" },
+            products: {
+              $push: {
+                product: "$productDetails",
+                Qty: "$products.Qty"
+              }
+            }
           }
         }
-
       ]).toArray()
       resolve(cartItems)
     })
@@ -151,7 +159,25 @@ module.exports = {
 
   },
   decreaseCartItem: (proId, userId) => {
-    client.db('shopping-cart').collection('cart').findOne({ user: new objectId(userId), })
+    return new Promise(async (resolve, reject) => {
+      let userCart = await client.db('shopping-cart').collection('cart').findOne({ user: new objectId(userId) })
+      if (userCart) {
+        let updatedProducts = userCart.products.map(item => {
+          if (item.product.toString() === proId) {
+            return { ...item, Qty: item.Qty - 1 }
+          }
+          return item
+        }).filter(item => item.Qty > 0)
+
+        await client.db('shopping-cart').collection('cart').updateOne(
+          { user: new objectId(userId) },
+          { $set: { products: updatedProducts } }
+        )
+        resolve()
+      } else {
+        reject(new Error('Cart not found'))
+      }
+    })
   },
   placeOrder: (order, product, userId) => {
     return new Promise(async (resolve, reject) => {

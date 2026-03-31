@@ -1,56 +1,119 @@
-<body>
-
-    <div class="success-container">
-        <div class="success-message">
-            Order Successful!
+<div class="container-fluid py-5">
+  <div class="row justify-content-center align-items-center min-vh-100">
+    <div class="col-12 col-md-8 col-lg-6 text-center">
+      <!-- Success Card -->
+      <div class="card shadow-lg border-0 scale-in" style="border-radius: 20px; overflow: hidden;">
+        <!-- Success Header -->
+        <div class="bg-success text-white py-5" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;">
+          <div class="position-relative d-inline-block mb-3">
+            <i class="bi bi-check-circle-fill display-1" style="animation: bounceIn 0.8s ease-out;"></i>
+            <!-- Animated circles around check -->
+            <div class="position-absolute" style="width: 100%; height: 100%; top: 0; left: 0;">
+              <span class="position-absolute" style="top: -10px; right: -10px; width: 20px; height: 20px; background-color: rgba(255,255,255,0.6); border-radius: 50%; animation: pulse-ring 1.5s ease-out infinite;"></span>
+              <span class="position-absolute" style="bottom: -15px; left: -5px; width: 15px; height: 15px; background-color: rgba(255,255,255,0.4); border-radius: 50%; animation: pulse-ring 2s ease-out infinite 0.5s;"></span>
+            </div>
+          </div>
+          <h1 class="display-4 fw-bold mb-2">Order Successful!</h1>
+          <p class="lead mb-0 opacity-90">Thank you for your purchase</p>
         </div>
-       <a href="/"><button class="button"> Go to Homepage</button></a>
+
+        <!-- Card Body -->
+        <div class="card-body p-5">
+          <div class="mb-4">
+            <i class="bi bi-check2-circle text-success display-4 mb-3 bounce"></i>
+            <h3 class="fw-bold">Your order has been placed!</h3>
+            <p class="text-muted">We've received your order and will process it shortly.</p>
+          </div>
+
+          <div class="alert alert-success border-0 shadow-sm mb-4" role="alert">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-info-circle-fill mr-3 fs-4"></i>
+              <div>
+                <strong>Order ID:</strong> <span id="order-id">{{orderId}}</span><br>
+                <small class="text-muted">Please save this for future reference</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+            <a href="/" class="btn btn-success btn-lg px-4" style="min-width: 150px; transition: all 0.3s ease;">
+              <i class="bi bi-house mr-2"></i> Back to Home
+            </a>
+            {{#if user}}
+              <a href="/cart" class="btn btn-outline-info btn-lg px-4" style="transition: all 0.3s ease;">
+                <i class="bi bi-cart mr-2"></i> View Cart
+              </a>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+
+      <!-- Confetti Animation (pure CSS) -->
+      <div class="mt-4 text-muted">
+        <small>You will receive a confirmation email shortly</small>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- Floating confetti particles animation -->
+<div id="confetti-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden;"></div>
+
 <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            overflow: hidden; /* Prevent scrolling on the success screen */
-        }
+  @keyframes bounceIn {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+  }
 
-        .success-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: rgba(0, 128, 0, 0.1); /* Light green background */
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 999;
-            animation: fadeIn 2s ease-out;
-        }
+  @keyframes pulse-ring {
+    0% { transform: scale(0.8); opacity: 0.8; }
+    100% { transform: scale(2); opacity: 0; }
+  }
 
-        .success-message {
-            font-size: 2rem;
-            color: #4CAF50;
-            margin-bottom: 20px;
-        }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+  }
 
-        .button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: white;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #f00;
+    animation: floatUp 3s ease-in forwards;
+  }
 
-        .button:hover {
-            background-color: #45a049;
-        }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
+  .btn:active {
+    transform: translateY(0);
+  }
+</style>
+
+<script>
+  // Generate confetti particles
+  const colors = ['#28a745', '#17a2b8', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14'];
+  const container = document.getElementById('confetti-container');
+
+  for (let i = 0; i < 50; i++) {
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    confetti.style.animationDelay = Math.random() * 2 + 's';
+    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+    confetti.style.height = confetti.style.width;
+    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    container.appendChild(confetti);
+  }
+
+  // Remove confetti after animation
+  setTimeout(() => {
+    container.innerHTML = '';
+  }, 5000);
+</script>
